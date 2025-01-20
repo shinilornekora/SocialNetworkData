@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Определение активности пользователя</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 400px;
+            max-width: min-content;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 20px;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Проверка активности</h1>
+        <form id="activityForm">
+            <label for="posts">Количество постов:</label>
+            <input type="number" id="posts" name="posts" min="0" required>
+
+            <label for="likes">Количество лайков:</label>
+            <input type="number" id="likes" name="likes" min="0" required>
+
+            <label for="messages">Количество отправленных сообщений:</label>
+            <input type="number" id="messages" name="messages" min="0" required>
+
+            <label for="photos">Количество фото за день:</label>
+            <input type="number" id="photos" name="photos" step="0.01" min="0" required>
+
+            <label for="topic">Тема аккаунта:</label>
+            <select id="topic" name="topic" required>
+                <option value="political">Политика</option>
+                <option value="music">Музыка</option>
+                <option value="technologies">Технологии</option>
+                <option value="sport">Спорт</option>
+                <option value="lifestyle">Образ жизни</option>
+            </select>
+
+            <label for="model">Тип модели</label>
+            <select id="model" name="model" required>
+                <option value="custom">Своя реализация</option>
+                <option value="sklearn">Реализация sklearn</option>=
+            </select>
+
+            <button type="button" id="submitButton">Проверить активность</button>
+        </form>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById("submitButton").onclick = function() {
+            const formData = new FormData(document.getElementById("activityForm"));
+            const data = Object.fromEntries(formData.entries());
+
+            fetch('/handle_click', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById("result").textContent = result.message;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("result").textContent = 'Ошибка при обработке данных';
+            });
+        };
+    </script>
+</body>
+</html>

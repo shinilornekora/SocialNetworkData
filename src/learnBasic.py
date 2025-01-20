@@ -1,19 +1,25 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
 # 1. Загрузка данных
-# Замените на путь к вашему CSV файлу
-data = pd.read_csv('data_with_class_int.csv')
+script_dir = os.path.dirname(__file__)
+file_path = os.path.join(script_dir, 'data_with_class_int.csv')
+data = pd.read_csv(file_path)
 
 # Разделение на признаки и целевую переменную
 X = data[['PostsCount', 'LikesPerPost', 'MessagesSent', 'PhotosPerDay', 'Topic']].values
-y = data['classes'].values.reshape(-1, 1)  # Целевые метки
+y = data['classes'].values.reshape(-1, 1)
 
 # Нормализация данных
 X_mean = np.mean(X, axis=0)
 X_std = np.std(X, axis=0)
 X = (X - X_mean) / X_std
+
+# Сохранение нормализационных параметров
+normParamsFilePath = os.path.join(script_dir, 'normalization_params.txt')
+np.savetxt(normParamsFilePath, np.vstack((X_mean, X_std)), delimiter=' ')
 
 # Добавление единичного столбца для смещения (bias)
 X = np.hstack((np.ones((X.shape[0], 1)), X))
@@ -64,7 +70,6 @@ iterations = 1000
 weights, cost_history = gradient_descent(X_train, y_train, weights, learning_rate, iterations)
 
 # 5. Оценка точности
-
 def predict(X, weights):
     probabilities = sigmoid(np.dot(X, weights))
     return (probabilities >= 0.5).astype(int)
@@ -72,6 +77,10 @@ def predict(X, weights):
 y_pred = predict(X_test, weights)
 accuracy = np.mean(y_pred == y_test) * 100
 print(f'Точность модели: {accuracy:.2f}%')
+
+with open('weights.txt', 'w') as file:
+    weightsFilePath = os.path.join(script_dir, 'weights.txt')
+    np.savetxt(weightsFilePath, weights, fmt='%f', delimiter=' ')
 
 # Визуализация функции стоимости
 plt.plot(range(iterations), cost_history)
