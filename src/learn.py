@@ -8,11 +8,14 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
+import os
+
+script_dir = os.path.dirname(__file__)
 
 # Загрузка данных из CSV
-data = pd.read_csv('data_with_class_int.csv')  # Замените на путь к вашему CSV файлу
+dataFile = os.path.join(script_dir, 'data_with_class_int.csv')
+data = pd.read_csv(dataFile)
 
-# Разделение на признаки и целевую переменную
 X = data[['PostsCount', 'LikesPerPost', 'MessagesSent', 'PhotosPerDay', 'Topic']]
 y = data['classes']
 
@@ -102,14 +105,8 @@ plt.xlabel('Normalized Feature 1')
 plt.ylabel('Normalized Feature 2')
 plt.show()
 
-
-
-
-
 # Прогнозирование на тестовых данных
 y_pred = model.predict(X_test)
-
-
 
 y_prob = model.predict_proba(X_test)[:, 1]  # Вероятности класса 1
 

@@ -97,8 +97,7 @@ for true, pred in zip(y_test, y_pred):
 print("Матрица ошибок:")
 print(confusion_matrix)
 
-# Визуализация разделяющей гиперплоскости для двух признаков
-if X.shape[1] - 1 >= 2:  # Проверяем, есть ли хотя бы два признака
+if X.shape[1] - 1 >= 2:
     plt.figure(figsize=(8, 6))
     x_min, x_max = X_test[:, 1].min() - 1, X_test[:, 1].max() + 1
     y_min, y_max = X_test[:, 2].min() - 1, X_test[:, 2].max() + 1
